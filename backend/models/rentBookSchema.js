@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const cyrpt = require('../crypt');
 const db = require('../db')();
 const rentBookSchema = new mongoose.Schema({
   name: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Book'},
