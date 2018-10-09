@@ -3,8 +3,8 @@ const crypto = require('crypto');
 const cyrpt = require('../crypt');
 const db = require('../db')();
 const rentBookSchema = new mongoose.Schema({
-  name: { type: String, required: true},
-  borrower: { type: String, required: true },
+  name: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Book'},
+  borrower: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
   rentDate: { type: Date, required: true, trim: true },
   returnDueDate: {type: Date, required: true, trim: true},
   returnDate: {type: Date, required: true, trim: true},
