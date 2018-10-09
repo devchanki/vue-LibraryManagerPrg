@@ -39,6 +39,21 @@ router.get('/books', function(req, res, next) {
   })
 });
 
+router.get('/book/:id', function(req, res, next) {
+  Book.findOne({_id: req.params.id})
+  .populate({
+    path: 'author',
+    model: Author
+  })
+  .then(book => {
+    res.send({status: true, book})
+  })
+  .catch(err => {
+    console.log(err)
+    res.send({status: false})
+  })
+});
+
 const word = ['Ace','Betty','Canon','David','East','Fatty','Growning','Harry','Isaac','Jack','Kelly','Lilly','Mary','Nelson','Oston','Philip','Queen','Ryan','Simon','Todd','Ured','VI','W.','Yvern','Zedd']
 const word2 = `bird
 office
@@ -1033,11 +1048,10 @@ Book.find({})
     }
     Author.find({})
     .then(authors => {
-      var ids = authors.map(el => el._id)
       for(var i=0;i<1000;i++) {
         new Book({
           name: word2[parseInt(Math.random() * word2.length)] + ' ' + word2[parseInt(Math.random() * word2.length)] + ' ' + word2[parseInt(Math.random() * word2.length)] + ' ' + word2[parseInt(Math.random() * word2.length)],
-          author: ids[parseInt(Math.random() * (ids.length - 1))],
+          author: authors[parseInt(Math.random() * (authors.length - 1))]._id,
           writtenDate: new Date(parseInt(Math.random() * 100) + 1900, parseInt(Math.random() * 12), parseInt(Math.random() * 31)),
           genre: genres[parseInt(Math.random() * genres.length)]
         }).save()
