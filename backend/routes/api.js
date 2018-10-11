@@ -54,6 +54,23 @@ router.get('/book/:id', function(req, res, next) {
   })
 });
 
+router.get('/author/:id', function(req, res, next) {
+  Author.findOne({_id: req.params.id})
+  .then(author => {
+    Book.find({author: author._id})
+    .then(books => {
+      res.send({status: true, author, books})
+    })
+    .catch(err => {
+      res.send({status: false})
+    })
+  })
+  .catch(err => {
+    res.send({status: false})
+  })
+});
+
+
 const word = ['Ace','Betty','Canon','David','East','Fatty','Growning','Harry','Isaac','Jack','Kelly','Lilly','Mary','Nelson','Oston','Philip','Queen','Ryan','Simon','Todd','Ured','VI','W.','Yvern','Zedd']
 const word2 = `bird
 office
