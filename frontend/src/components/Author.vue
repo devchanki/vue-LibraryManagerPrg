@@ -1,7 +1,7 @@
 <template>
   <div class="s">
     <ul>
-      <li v-for="(item, index) in this.author = this.authors.filter(el => {if(el.author == decodeURI(this.$route.query.name)) return el})[0]">
+      <li v-for="(item, index) in author" >
         {{index}} : {{item}}
       </li>
     </ul>
@@ -10,13 +10,21 @@
 
 <script>
 export default {
-    data (){
-      return {
-        authors: [
-            {author: "베르나르 베르베르", book : "뇌, 개미"},
-            {author: "t0dd hong", book: "효율적인 개발자 다루기, 초보 개발자 괴롭히기"}
-      ]
-    }}
+  data (){
+    return {
+      author: []
+    }
+  },
+  beforeCreate: function() {
+    this.$http.get('/api/author/' + this.$route.query.id)
+    .then(res => {
+      console.log(res.data)
+      if(res.data.status) {
+        this.author = res.data.author
+        console.log("북")
+      }
+    })
+  }
 }
 </script>
 
