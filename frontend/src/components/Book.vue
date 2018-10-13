@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="top-bar">
-      <p>책 제목</p>
+      <p>{{book.name}}</p>
     </div>
     <div class="card">
       <ul>

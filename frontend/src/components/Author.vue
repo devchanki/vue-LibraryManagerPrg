@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="top-bar">
-      <p>작가의 상세정보</p>
+      <p>{{author.name}}</p>
     </div>
 
     <div class="card">
