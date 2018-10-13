@@ -1,10 +1,15 @@
 <template>
-  <div class="s">
-    <ul>
-      <li v-for="(item, index) in author" >
-        {{index}} : {{item}}
-      </li>
-    </ul>
+  <div class="main">
+    <div class="top-bar">
+      <p>작가의 상세정보</p>
+    </div>
+
+    <div class="card">
+      <ul>
+        <p>작가의 이름 : {{author.name}}</p>
+        <p>작가의 생년월일 : {{author.birthDate.split("T")[0]}}</p>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -12,7 +17,7 @@
 export default {
   data (){
     return {
-      author: []
+      author: null
     }
   },
   beforeCreate: function() {
@@ -29,4 +34,34 @@ export default {
 </script>
 
 <style lang="css">
+  *{
+    margin: 0;
+    padding: 0;
+  }
+  #app{
+    margin: 0;
+  }
+  .top-bar{
+    width: 100%;
+    height: 100px;
+    background-color: lightblue;
+  }
+  .top-bar p{
+    padding-top: 40px;
+    font-size: 1.5em;
+  }
+  .card{
+    background-color: #454545;
+    display: inline-flex;
+    color: white;
+    border-radius: 8px;
+    padding: 20px 40px;
+    margin: 40px;
+  }
+  .main{
+    background-color: rgb(232, 234, 237);
+  }
+  .card a{
+    color: white;
+  }
 </style>
