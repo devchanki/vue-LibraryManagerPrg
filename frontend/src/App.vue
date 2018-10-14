@@ -19,4 +19,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+html{
+  background-color: rgb(232, 234, 237);
+}
 </style>

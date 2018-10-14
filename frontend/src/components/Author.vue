@@ -10,6 +10,21 @@
         <p>작가의 생년월일 : {{author.birthDate.split("T")[0]}}</p>
       </ul>
     </div>
+
+    <div class="card">
+      <div class="author-books">
+        <div v-if="books.length == 0" >
+          <p>작가는 다른 작품이 없습니다.</p>
+        </div>
+        <div v-else>
+          <p class="author-books-top">작가의 다른 도서들입니다.</p>
+          <ul>
+              <a :href="'/book?id=' + books[key]._id" class="card1" v-for="(value, key) in books"> {{books[key].name}}</a>
+          </ul>
+        </div>
+      </div>
+    </ul>
+    </div>
   </div>
 </template>
 
@@ -17,7 +32,8 @@
 export default {
   data (){
     return {
-      author: null
+      author: null,
+      books: Array
     }
   },
   beforeCreate: function() {
@@ -25,8 +41,8 @@ export default {
     .then(res => {
       console.log(res.data)
       if(res.data.status) {
-        this.author = res.data.author
-        console.log("북")
+        this.author = res.data.author,
+        this.books = res.data.books
       }
     })
   }
@@ -61,7 +77,18 @@ export default {
   .main{
     background-color: rgb(232, 234, 237);
   }
-  .card a{
-    color: white;
+
+  .author-books-top{
+    margin: 10px;
+    font-size: 25px;
   }
+  .card1{
+    color: black;
+    background-color: rgb(232, 234, 237);
+    border-radius: 7px;
+    padding : 8px;
+    margin: 8px;
+    display: block;
+  }
+
 </style>
