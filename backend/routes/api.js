@@ -10,11 +10,14 @@ const RentBook = require('../models/rentBookSchema');
 router.post('/signin', function(req, res, next) {
   User.findOne({email: req.body.email, password: req.body.password})
   .then(user => {
-    if(user) {
+    if(!user) {
       res.send({status: false, msg: 'no user'})
     } else {
       res.send({status: true})
     }
+  }).catch(err => {
+    console.log(err)
+    res.send({status: false})
   })
 })
 
