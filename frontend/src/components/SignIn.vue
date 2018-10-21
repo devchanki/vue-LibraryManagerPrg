@@ -32,6 +32,7 @@ export default {
           console.log(res.data)
           if(res.data.status) {
             alert('로그인 성공')
+            window.localStorage.libraryManager = res.data.user.email + '#' + res.data.user._id
             location.reload()
           } else {
             alert('실패')

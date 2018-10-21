@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  destroyed: function() {
+    localStorage.removeItem('libraryManager')
+  }
 }
 </script>
 

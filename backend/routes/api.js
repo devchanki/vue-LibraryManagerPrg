@@ -13,7 +13,7 @@ router.post('/signin', function(req, res, next) {
     if(!user) {
       res.send({status: false, msg: 'no user'})
     } else {
-      res.send({status: true})
+      res.send({status: true, user: {email: user.email, _id: user._id}})
     }
   }).catch(err => {
     console.log(err)
@@ -31,7 +31,7 @@ router.post('/signup', function(req, res, next) {
       console.log(err)
       res.send({status: false, err})
     } else {
-      res.send({status: true, user: user._id})
+      res.send({status: true})
     }
   })
 })
