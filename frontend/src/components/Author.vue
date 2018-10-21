@@ -19,7 +19,7 @@
         <div v-else>
           <p class="author-books-top">작가의 다른 도서들입니다.</p>
           <ul>
-              <a :href="'/book?id=' + books[key]._id" class="card1" v-for="(value, key) in books"> {{books[key].name}}</a>
+              <a :href="'/book?id=' + books[key]._id" class="card1" v-for="(value, key) in books"> {{books[key].name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")}}</a>
           </ul>
         </div>
       </div>
@@ -33,7 +33,7 @@ export default {
   data (){
     return {
       author: null,
-      books: Array
+      books: []
     }
   },
   beforeCreate: function() {
@@ -49,14 +49,8 @@ export default {
 }
 </script>
 
-<style lang="css">
-  *{
-    margin: 0;
-    padding: 0;
-  }
-  #app{
-    margin: 0;
-  }
+<style scoped>
+
   .top-bar{
     width: 100%;
     height: 100px;
@@ -65,6 +59,7 @@ export default {
   .top-bar p{
     padding-top: 40px;
     font-size: 1.5em;
+    margin: 0px;
   }
   .card{
     background-color: #454545;
@@ -82,6 +77,9 @@ export default {
     margin: 10px;
     font-size: 25px;
   }
+  .card ul{
+    padding: 0;
+  }
   .card1{
     color: black;
     background-color: rgb(232, 234, 237);
@@ -90,5 +88,8 @@ export default {
     margin: 8px;
     display: block;
   }
+  .card1:hover {
+  background:#EA575B;
+}
 
 </style>

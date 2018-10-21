@@ -1,11 +1,11 @@
 <template>
   <div class="main">
     <div class="top-bar">
-      <p>{{book.name}}</p>
+      <p>{{book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")}}</p>
     </div>
     <div class="card">
       <ul>
-        <p>책 이름 :   {{book.name}}</p>
+        <p>책 이름 :   {{book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")}}</p>
         <p>작가 : <a :href="'/author?id=' + book.author._id">{{book.author.name}} </a> </p>
         <p>장르 : {{book.genre}}</p>
         <p>책 출간일 : {{book.writtenDate.split('T')[0]}}</p>
@@ -37,14 +37,7 @@ export default {
 
 </script>
 
-<style>
-  *{
-    margin: 0;
-    padding: 0;
-  }
-  #app{
-    margin: 0;
-  }
+<style scoped>
   .top-bar{
     width: 100%;
     height: 100px;
@@ -53,6 +46,7 @@ export default {
   .top-bar p{
     padding-top: 40px;
     font-size: 1.5em;
+    margin: 0px;
   }
   .card{
     background-color: #454545;
@@ -61,6 +55,9 @@ export default {
     border-radius: 8px;
     padding: 20px 40px;
     margin: 40px;
+  }
+  .card ul{
+    padding: 0;
   }
   .main{
     background-color: rgb(232, 234, 237);

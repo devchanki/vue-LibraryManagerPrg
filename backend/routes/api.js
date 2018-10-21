@@ -6,6 +6,33 @@ const User = require('../models/userSchema');
 const RentBook = require('../models/rentBookSchema');
 
 /* GET users listing. */
+
+router.post('/signin', function(req, res, next) {
+  User.findOne({email: req.body.email, password: req.body.password})
+  .then(user => {
+    if(user) {
+      res.send({status: false, msg: 'no user'})
+    } else {
+      res.send({status: true})
+    }
+  })
+})
+
+router.post('/signup', function(req, res, next) {
+  new User({
+    email: req.body.email,
+    password: req.body.password,
+    salt: 'abcd'
+  }).save((err, user) => {
+    if(err) {
+      console.log(err)
+      res.send({status: false, err})
+    } else {
+      res.send({status: true, user: user._id})
+    }
+  })
+})
+
 router.get('/authors', function(req, res, next) {
   Author.find({})
   .then(authors => {

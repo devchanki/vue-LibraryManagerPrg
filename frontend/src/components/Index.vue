@@ -6,9 +6,11 @@
     <div class="card">
       <ul>
           <li v-for="book in books">
-            <div class="card1">
-              <a :href="'/book?id=' + book._id">{{ book.name }}</a>
-            </div>
+            <a :href="'/book?id=' + book._id" class="card1">
+              {{
+                book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
+              }}
+            </a>
           </li>
       </ul>
     </div>
@@ -34,14 +36,7 @@ export default {
 }
 </script>
 
-<style lang="css">
-*{
-  margin: 0;
-  padding: 0;
-}
-#app{
-  margin: 0;
-}
+<style scoped>
 .top-bar{
   width: 100%;
   height: 100px;
@@ -49,6 +44,7 @@ export default {
 }
 .top-bar p{
   padding-top: 40px;
+  margin: 0;
   font-size: 1.5em;
 }
 .book-list{
@@ -73,8 +69,12 @@ li{
   border-radius: 7px;
   padding : 8px;
   margin: 8px;
+  display: block;
 }
 .card1 a{
   color: white;
+}
+.card1:hover{
+  background:#EA575B;
 }
 </style>
