@@ -22,7 +22,7 @@
           <li v-for="book in books">
             <a :href="'/book?id=' + book._id" class="card1">
               {{
-                books.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
+                book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
               }}
             </a>
           </li>
