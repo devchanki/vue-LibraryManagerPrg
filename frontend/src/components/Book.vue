@@ -6,7 +6,7 @@
     <div class="card">
       <ul>
         <p>책 이름 :   {{book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")}}</p>
-        <p>작가 : <a :href="'/author?id=' + book.author._id">{{book.author.name}} </a> </p>
+        <p>작가 : <a :href="'/author?id=' + book.author._id">{{book.author.name}}</a> </p>
         <p>장르 : {{book.genre}}</p>
         <p>책 출간일 : {{book.writtenDate.split('T')[0]}}</p>
       </ul>

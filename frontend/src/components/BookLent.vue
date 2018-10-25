@@ -1,30 +1,17 @@
 <template>
   <div class="main">
-    <div class="menutab">
-      <ul>
-        <li>로그인</li>
-        <li>asdfasdf</li>
-        <li>asdfasdf</li>
-      </ul>
-    </div>
     <div class="top-bar">
-      <p>도서관</p>
-      <div class="nav-bar">
-        <div class="dot-nav">
-          <span class="dot-line" @onclick="showMenu"></span>
-          <span class="dot-line" @onclick="showMenu"></span>
-          <span class="dot-line" @onclick="showMenu"></span>
-        </div>
-      </div>
+      <p>책 현황</p>
     </div>
     <div class="card">
       <ul>
           <li v-for="book in books">
             <a :href="'/book?id=' + book._id" class="card1">
               {{
-                books.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
+                book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
               }}
             </a>
+            <button class="Lent-Button" @onClick="">책 빌리기</button>
           </li>
       </ul>
     </div>
@@ -51,19 +38,6 @@ export default {
 </script>
 
 <style scoped>
-.menutab{
-  position: fixed;
-  top: 0;
-  right: 0px;
-  background-color: #454545;
-  width: 30%;
-  height: 100%;
-  z-index: 1;
-  transition: right 0.3;
-}
-.menutab li{
-  color: white;
-}
 .top-bar{
   width: 100%;
   height: 100px;
@@ -74,30 +48,6 @@ export default {
   margin: 0;
   font-size: 1.5em;
 }
-.nav-bar {
-  width: 60px;
-  position: absolute;
-  height: 50px;
-  top: 22px;
-  right: 10px;
-
-  }
-  .dot-nav {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-  }
-  .dot-line {
-    display: inline;
-    border-style: solid;
-    border-bottom: 2px solid;
-    color: #454545;
-    height: 2px;
-    margin: 2px;
-  }
-  .nav-bar :hover span{
-    color: #EA575B
-  }
 .book-list{
   background-color: yellow;
 }
@@ -122,14 +72,22 @@ ul{
   background-color: #454545;
   color: white;
   border-radius: 7px;
-  padding : 8px;
+  padding : 10px;
   margin: 8px;
-  display: block;
+  display: inline-block;
 }
 .card1 a{
   color: white;
 }
 .card1:hover{
   background:#EA575B;
+}
+.Lent-Button{
+  width: 100px;
+  height: 40px;
+  background-color: #0092ff;
+  outline: none;
+  font-size: 15px;
+  border-radius: 5px;
 }
 </style>

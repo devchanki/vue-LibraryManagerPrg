@@ -5,6 +5,7 @@ import Book from '@/components/Book.vue'
 import Author from '@/components/Author.vue'
 import SignUp from '@/components/SignUp.vue'
 import SignIn from '@/components/SignIn.vue'
+import BookLent from '@/components/BookLent.vue'
 
 Vue.use(Router)
 
@@ -30,6 +31,10 @@ export default new Router({
     {
       path: '/signin',
       component: SignIn
+    },
+    {
+      path: '/booklent',
+      component: BookLent
     },
   ]
 })
