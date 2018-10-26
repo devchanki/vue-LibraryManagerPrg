@@ -1,19 +1,20 @@
 <template>
   <div class="main">
-    <div class="menutab">
+    <div class="menutab-close">
+      <button class = "hide-menu-button" type="button" v-on:click="hidemenu">메뉴 숨기기</button>
+      <a href="/signin" v-if="loginCheck" class="login">로그인</a>
+      <a v-on:click="logout" v-else class="logout">로그아웃</a>
       <ul>
-        <li>로그인</li>
-        <li>asdfasdf</li>
-        <li>asdfasdf</li>
+        <li v-if="!loginCheck">{{User.split("#")[0]}}님 환영합니다.</li>
       </ul>
     </div>
     <div class="top-bar">
       <p>도서관</p>
       <div class="nav-bar">
-        <div class="dot-nav">
-          <span class="dot-line" @onclick="showMenu"></span>
-          <span class="dot-line" @onclick="showMenu"></span>
-          <span class="dot-line" @onclick="showMenu"></span>
+        <div class="dot-nav" v-on:click="showmenu">
+          <span class="dot-line" ></span>
+          <span class="dot-line" ></span>
+          <span class="dot-line" ></span>
         </div>
       </div>
     </div>
@@ -35,7 +36,8 @@
 export default {
   data (){
     return {
-      books: []
+      books: [],
+      User: String
     }
   },
   beforeCreate: function() {
@@ -44,25 +46,88 @@ export default {
       console.log(res.data)
       if(res.data.status) {
         this.books = res.data.books
+        this.User =  window.localStorage.libraryManager;
       }
     })
   },
-}
+  methods: {
+   showmenu: function (event) {
+     // 메소드 안에서 사용하는 `this` 는 Vue 인스턴스를 가리킵니다
+     document.getElementsByClassName("menutab-close")[0].className="menutab-open";
+   },
+   hidemenu: function (event) {
+   // 메소드 안에서 사용하는 `this` 는 Vue 인스턴스를 가리킵니다
+   document.getElementsByClassName("menutab-open")[0].className="menutab-close";
+   },
+   logout: function(event){
+     localStorage.removeItem('libraryManager');
+     location.reload();
+   }
+  },
+  computed: {
+      // 계산된 getter
+      loginCheck: function () {
+        if(!window.localStorage.libraryManager){
+          return true;
+        }
+        else{
+          return false;
+        }
+      },
+      }
+    }
+
 </script>
 
 <style scoped>
-.menutab{
+.menutab-close{
+  position: fixed;
+  top: 0;
+  right: -300px;
+  background-color: #454545;
+  width: 300px;
+  height: 100%;
+  z-index: 1;
+  transition: right, 0.5s;
+}
+.hide-menu-button{
+  padding: 8px 10px;
+  color: #454545;
+  background-color: white;
+  margin: 10px 0 0 200px;
+  border-radius: 8px;
+}
+.menutab-open{
   position: fixed;
   top: 0;
   right: 0px;
   background-color: #454545;
-  width: 30%;
+  width: 300px;
   height: 100%;
   z-index: 1;
-  transition: right 0.3;
+  transition: right, 0.5s;
 }
-.menutab li{
+
+.menutab-close li,.menutab-open li{
   color: white;
+}
+.login{
+  color: white;
+  display: inline-block;
+  padding: 10px 30px;
+  background-color: #0092ff;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.logout{
+  color: white;
+  display: inline-block;
+  padding: 10px 30px;
+  background-color: #0092ff;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 .top-bar{
   width: 100%;
