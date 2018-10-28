@@ -20,7 +20,6 @@ router.post('/signin', function(req, res, next) {
     res.send({status: false})
   })
 })
-
 router.post('/signup', function(req, res, next) {
   new User({
     email: req.body.email,
@@ -49,8 +48,9 @@ router.get('/authors', function(req, res, next) {
 
 router.get('/users', function(req, res, next) {
   User.find({})
-  .then(authors => {
+  .then(users => {
     res.send({status: true, users})
+    console.log(users)
   })
   .catch(err => {
     console.log(err)
@@ -94,6 +94,16 @@ router.get('/author/:id', function(req, res, next) {
     .catch(err => {
       res.send({status: false})
     })
+  })
+  .catch(err => {
+    res.send({status: false})
+  })
+});
+
+router.get('/user/:id' , function(req,res,next) {
+  User.findOne({_id: req.params.id})
+  .then(users =>{
+    res.send({status: true, count: users.bookLentCount})
   })
   .catch(err => {
     res.send({status: false})

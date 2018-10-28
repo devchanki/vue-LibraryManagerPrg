@@ -5,7 +5,8 @@
       <a href="/signin" v-if="loginCheck" class="login">로그인</a>
       <a v-on:click="logout" v-else class="logout">로그아웃</a>
       <ul>
-        <li v-if="!loginCheck">{{User.split("#")[0]}}님 환영합니다.</li>
+        <li v-if="!loginCheck">{{userName.split("#")[0]}}님 환영합니다.</li>
+        <a href="/">메인화면으로 가기</a>
       </ul>
     </div>
     <div class="top-bar">
@@ -37,7 +38,7 @@ export default {
   data (){
     return {
       books: [],
-      User: String
+      userName: String
     }
   },
   beforeCreate: function() {
@@ -46,7 +47,7 @@ export default {
       console.log(res.data)
       if(res.data.status) {
         this.books = res.data.books
-        this.User =  window.localStorage.libraryManager;
+        this.userName =  window.localStorage.libraryManager;
       }
     })
   },

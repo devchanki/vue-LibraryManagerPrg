@@ -33,7 +33,7 @@ export default {
           if(res.data.status) {
             alert('로그인 성공')
             window.localStorage.libraryManager = res.data.user.email + '#' + res.data.user._id
-            location.reload()
+            history.back()
           } else {
             alert('실패')
             location.reload()

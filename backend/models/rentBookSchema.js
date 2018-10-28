@@ -6,7 +6,7 @@ const rentBookSchema = new mongoose.Schema({
   borrower: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
   rentDate: { type: Date, required: true, trim: true },
   returnDueDate: {type: Date, required: true, trim: true},
-  returnDate: {type: Date, required: true, trim: true},
+  returnDate: {type: Date, trim: true},
   id: mongoose.Schema.Types.ObjectId
 });
 module.exports = db.model('RentBook', rentBookSchema);
