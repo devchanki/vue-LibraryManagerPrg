@@ -28,7 +28,7 @@
                 book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
               }}
             </a>
-            <button class="Lent-Button" v-if="userBookLent <= lentLimit"  v-on:click='lent(book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" "))'>책 빌리기</button>
+            <button class="Lent-Button" v-if="userBookLent <= lentLimit"  v-on:click='rent(book._id)'>책 빌리기</button>
             <button class="Lent-Unavailable" v-else>빌릴 수 없습니다.</button>
           </li>
       </ul>
@@ -55,8 +55,19 @@ export default {
       if(res.data.status) {
         this.books = res.data.books
         this.userName = window.localStorage.libraryManager
+        this.$http.get("/api/rentbook/limit/" + this.userName.split("#")[1])
+        .then(res => {
+          if(res.data.status) {
+            this.userBookLent = res.data.count
+          }
+          })
       }
-    })
+      })
+      .catch(err=> {
+        console.log(err)
+      })
+
+
   },
   methods: {
    showmenu: function (event) {
@@ -69,13 +80,21 @@ export default {
      localStorage.removeItem('libraryManager');
      location.reload();
    },
-   lent: function(bookname){
-       // this.$http.post('/api/booklent/', {
-       //   book: bookname,
-       //   borrower: userName.split('#')[0]
-       //   rentDate: (현재 서버 시간)
-//          returnDueDate: 현재서버시간 + 7
-       // })
+   rent: function(bookname){
+       this.$http.post('/api/rent/', {
+         book: bookname,
+         user: this.userName.split("#")[1]
+       })
+       .then(res => {
+         console.log(res.data)
+         if(res.data.status) {
+           alert('정상적으로 빌려졌습니다.')
+           location.reload()
+         } else {
+           alert('에러발생')
+           location.reload()
+         }
+       })
      }
   },
   computed: {

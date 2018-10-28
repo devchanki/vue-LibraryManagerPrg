@@ -110,6 +110,17 @@ router.get('/user/:id' , function(req,res,next) {
   })
 });
 
+router.get('/rentbook/limit/:id' , function(req,res,next) {
+  RentBook.count({borrower: req.params.id})
+  .then(users =>{
+    res.send({status: true, count: users})
+
+  })
+  .catch(err => {
+    res.send({status: false})
+  })
+});
+
 router.post('/rent', function(req,res,next) {
   var rentDate = new Date()
   var returnDueDate = new Date(new Date() + (7 * 24 * 60 * 60 * 1000))
