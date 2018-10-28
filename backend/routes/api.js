@@ -110,6 +110,23 @@ router.get('/user/:id' , function(req,res,next) {
   })
 });
 
+router.post('/rent', function(req,res,next) {
+  var rentDate = new Date()
+  var returnDueDate = new Date(new Date() + (7 * 24 * 60 * 60 * 1000))
+  new RentBook({
+    book: req.body.book,
+    borrower: req.body.user,
+    rentDate: rentDate,
+    returnDueDate: returnDueDate,
+  }).save(err => {
+    if(err) {
+      console.log(err)
+      res.send({status: false, err})
+    } else {
+      res.send({status: true})
+    }
+  })
+})
 
 const word = ['Ace','Betty','Canon','David','East','Fatty','Growning','Harry','Isaac','Jack','Kelly','Lilly','Mary','Nelson','Oston','Philip','Queen','Ryan','Simon','Todd','Ured','VI','W.','Yvern','Zedd']
 const word2 = `bird
