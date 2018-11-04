@@ -7,6 +7,7 @@
       <ul>
         <li v-if="!loginCheck">{{userName.split("#")[0]}}님 환영합니다.</li>
         <a href="/">메인화면으로 가기</a>
+        <a href="/booklent">책 빌리기</a>
       </ul>
     </div>
     <div class="top-bar">
@@ -31,6 +32,7 @@
 </template>
 
 <script>
+import Menu from './Menu'
 export default {
   data (){
     return {
@@ -71,7 +73,10 @@ export default {
           return false;
         }
       },
-      }
+    },
+    components: {
+      Menu
+    }
     }
 
 </script>
@@ -105,7 +110,14 @@ export default {
   transition: right, 0.5s;
 }
 
-.menutab-close li,.menutab-open li{
+.menutab-close li, .menutab-open li{
+  list-style: none;
+  color: white;
+}
+.menutab-close ul, .menutab-open ul{
+  text-align: center;
+}
+.menutab-close ul a, .menutab-open ul a{
   color: white;
 }
 .login{

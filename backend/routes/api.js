@@ -112,8 +112,8 @@ router.get('/user/:id' , function(req,res,next) {
 
 router.get('/rentbook/limit/:id' , function(req,res,next) {
   RentBook.count({borrower: req.params.id})
-  .then(users =>{
-    res.send({status: true, count: users})
+  .then(count =>{
+    res.send({status: true, count})
 
   })
   .catch(err => {

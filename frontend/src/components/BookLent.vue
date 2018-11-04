@@ -7,7 +7,8 @@
       <ul>
         <li v-if="!loginCheck">{{userName.split("#")[0]}}님 환영합니다.</li>
         <li v-if="!loginCheck">{{userBookLent}}권 빌리셨습니다.</li>
-        <a href="/">메인화면으로 가기</a>
+        <a href="/" class="menuLink">메인화면으로 가기</a>
+        <a href="/booklent" class="menuLink">책빌리러가기</a>
       </ul>
     </div>
     <div class="top-bar">
@@ -60,7 +61,10 @@ export default {
           if(res.data.status) {
             this.userBookLent = res.data.count
           }
-          })
+        })
+        .catch(err =>{
+          console.log(err);
+        })
       }
       })
       .catch(err=> {
@@ -143,8 +147,15 @@ export default {
   color: white;
 }
 .menutab-close a,.menutab-open a{
-  color: white;
   text-decoration: none;
+}
+.menuLink{
+  display: block;
+  padding: 10px 30px;
+  border-radius: 8px;
+  margin-top: 10px;
+  background-color: white;
+  color: #454545;
 }
 .login{
   color: white;

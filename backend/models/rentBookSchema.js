@@ -4,9 +4,9 @@ const db = require('../db')();
 const rentBookSchema = new mongoose.Schema({
   book: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Book'},
   borrower: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-  rentDate: { type: Date, required: true, trim: true },
-  returnDueDate: {type: Date, required: true, trim: true},
-  returnDate: {type: Date, trim: true},
+  rentDate: { type: Date, required: true},
+  returnDueDate: {type: Date, required: true},
+  returnDate: {type: Date},
   id: mongoose.Schema.Types.ObjectId
 });
 module.exports = db.model('RentBook', rentBookSchema);
