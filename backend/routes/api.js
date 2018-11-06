@@ -1138,7 +1138,8 @@ Book.find({})
           name: word2[parseInt(Math.random() * word2.length)] + ' ' + word2[parseInt(Math.random() * word2.length)] + ' ' + word2[parseInt(Math.random() * word2.length)] + ' ' + word2[parseInt(Math.random() * word2.length)],
           author: authors[parseInt(Math.random() * (authors.length - 1))]._id,
           writtenDate: new Date(parseInt(Math.random() * 100) + 1900, parseInt(Math.random() * 12), parseInt(Math.random() * 31)),
-          genre: genres[parseInt(Math.random() * genres.length)]
+          genre: genres[parseInt(Math.random() * genres.length)],
+          quantity: parseInt(Math.random() * 20 + 1) * 5
         }).save()
       }
     })

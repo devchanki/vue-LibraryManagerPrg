@@ -6,7 +6,7 @@ const bookSchema = new mongoose.Schema({
   author: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Author'},
   writtenDate: { type: Date, required: true},
   genre: {type: String, required: true, trim: true},
-  quantity: {type: Number},
+  quantity: {type: Number, default: 0},
   id: mongoose.Schema.Types.ObjectId
 });
 
