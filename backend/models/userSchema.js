@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, match : /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/ },
   password: { type: String, required: true, trim: true },
   admin:{ type: Boolean },
-  bookLentCount: {type: Number,  trim:true},
   salt: { type: String, required: true, trim: true },
   id: mongoose.Schema.Types.ObjectId
 });

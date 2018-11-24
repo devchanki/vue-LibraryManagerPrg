@@ -6,23 +6,25 @@
       <a v-on:click="logout" v-else class="logout">로그아웃</a>
       <ul>
         <li v-if="!loginCheck">{{userName.split("#")[0]}}님 환영합니다.</li>
-        <a href="/">메인화면으로 가기</a>
-        <a href="/booklent">책 빌리기</a>
+        <li v-if="!loginCheck">{{userBookLent}}권 빌리셨습니다.</li>
+        <a href="/" class="menuLink">메인화면으로 가기</a>
+        <a href="/booklent" class="menuLink">책빌리러가기</a>
+        <a href="/myrentlist" class="menuLink">빌린 책 목록/반납</a>
       </ul>
     </div>
     <div class="top-bar">
       <p>{{book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")}}</p>
       <div class="nav-bar">
         <div class="dot-nav" v-on:click="showmenu">
-          <span class="dot-line" ></span>
-          <span class="dot-line" ></span>
-          <span class="dot-line" ></span>
+          <span class="dot-line"></span>
+          <span class="dot-line"></span>
+          <span class="dot-line"></span>
         </div>
       </div>
     </div>
     <div class="card">
       <ul>
-        <p>책 이름 :   {{book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")}}</p>
+        <p>책 이름 :{{book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")}}</p>
         <p>작가 : <a :href="'/author?id=' + book.author._id">{{book.author.name}}</a> </p>
         <p>장르 : {{book.genre}}</p>
         <p>책 출간일 : {{book.writtenDate.split('T')[0]}}</p>
@@ -32,12 +34,12 @@
 </template>
 
 <script>
-import Menu from './Menu'
 export default {
   data (){
     return {
       book: [],
-      userName: String
+      userName: '',
+      userBookLent: Number
     }
   },
   beforeCreate: function() {
@@ -48,36 +50,41 @@ export default {
         this.book = res.data.book
         this.userName =  window.localStorage.libraryManager
       }
+      this.$http.get("/api/rentbook/limit/" + this.userName.split("#")[1])
+      .then(res => {
+        if(res.data.status) {
+          this.userBookLent = res.data.count
+          console.log(this.userBookLent)
+        }
+      })
+      .catch(err =>{
+        console.log(err);
+      })
     })
-  },methods: {
-   showmenu: function (event) {
-     // 메소드 안에서 사용하는 `this` 는 Vue 인스턴스를 가리킵니다
-     document.getElementsByClassName("menutab-close")[0].className="menutab-open";
-   },
-   hidemenu: function (event) {
-   // 메소드 안에서 사용하는 `this` 는 Vue 인스턴스를 가리킵니다
-   document.getElementsByClassName("menutab-open")[0].className="menutab-close";
-   },
-   logout: function(event){
-     localStorage.removeItem('libraryManager');
-     location.reload();
-   }
+  },
+  methods: {
+     showmenu: function (event) {
+       document.getElementsByClassName("menutab-close")[0].className="menutab-open";
+     },
+     hidemenu: function (event) {
+       document.getElementsByClassName("menutab-open")[0].className="menutab-close";
+     },
+     logout: function(event){
+       localStorage.removeItem('libraryManager');
+       location.reload();
+     }
   },
   computed: {
-      // 계산된 getter
-      loginCheck: function () {
-        if(!window.localStorage.libraryManager){
-          return true;
-        }
-        else{
-          return false;
-        }
-      },
-    },
-    components: {
-      Menu
+    loginCheck: function () {
+      if(!window.localStorage.libraryManager){
+        return true;
+      }
+      else{
+        return false;
+      }
     }
-    }
+  },
+}
 
 </script>
 
@@ -109,7 +116,6 @@ export default {
   z-index: 1;
   transition: right, 0.5s;
 }
-
 .menutab-close li, .menutab-open li{
   list-style: none;
   color: white;
@@ -118,7 +124,15 @@ export default {
   text-align: center;
 }
 .menutab-close ul a, .menutab-open ul a{
-  color: white;
+
+}
+li{
+  list-style: none;
+  margin-bottom: 10px;
+}
+ul{
+  padding: 0;
+  margin: 0;
 }
 .login{
   color: white;
@@ -127,7 +141,7 @@ export default {
   background-color: #0092ff;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px;
 }
 .logout{
   color: white;
@@ -136,12 +150,21 @@ export default {
   background-color: #0092ff;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px;
 }
 .top-bar{
   width: 100%;
   height: 100px;
   background-color: lightblue;
+}
+.menuLink{
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 8px;
+  margin-top: 15px;
+  background-color: white;
+  color: #454545;
+  width: 200px;
 }
 .top-bar p{
   padding-top: 40px;
@@ -154,39 +177,38 @@ export default {
   height: 50px;
   top: 22px;
   right: 10px;
-
-  }
-  .dot-nav {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-  }
-  .dot-line {
-    display: inline;
-    border-style: solid;
-    border-bottom: 2px solid;
-    color: #454545;
-    height: 2px;
-    margin: 2px;
-  }
-  .nav-bar :hover span{
-    color: #EA575B
-  }
-  .card{
-    background-color: #454545;
-    display: inline-flex;
-    color: white;
-    border-radius: 8px;
-    padding: 20px 40px;
-    margin: 40px;
-  }
-  .card ul{
-    padding: 0;
-  }
-  .main{
-    background-color: rgb(232, 234, 237);
-  }
-  .card a{
-    color: white;
-  }
+}
+.dot-nav {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+.dot-line {
+  display: inline;
+  border-style: solid;
+  border-bottom: 2px solid;
+  color: #454545;
+  height: 2px;
+  margin: 2px;
+}
+.nav-bar :hover span{
+  color: #EA575B
+}
+.card{
+  background-color: #454545;
+  display: inline-flex;
+  color: white;
+  border-radius: 8px;
+  padding: 20px 40px;
+  margin: 40px;
+}
+.card ul{
+  padding: 0;
+}
+.main{
+  background-color: rgb(232, 234, 237);
+}
+.card a{
+  color: white;
+}
 </style>

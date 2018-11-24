@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
 const Author = require('../models/authorSchema');
 const Book = require('../models/bookSchema');
 const User = require('../models/userSchema');
@@ -69,14 +70,14 @@ router.get('/books', function(req, res, next) {
   })
 });
 
-router.get('/book/:id', function(req, res, next) {
-  Book.findOne({_id: req.params.id})
+router.get('/rentList/:id', function(req, res, next) {
+  RentBook.find({borrower: req.params.id, returnDate: undefined})
   .populate({
-    path: 'author',
-    model: Author
+    path: 'book',
+    model: Book
   })
-  .then(book => {
-    res.send({status: true, book})
+  .then(name => {
+    res.send({status: true, name})
   })
   .catch(err => {
     console.log(err)
@@ -111,33 +112,86 @@ router.get('/user/:id' , function(req,res,next) {
 });
 
 router.get('/rentbook/limit/:id' , function(req,res,next) {
-  RentBook.count({borrower: req.params.id})
+  console.log(req.params.id)
+  RentBook.countDocuments({borrower: mongoose.Types.ObjectId(req.params.id), returnDate: undefined})
   .then(count =>{
     res.send({status: true, count})
-
   })
   .catch(err => {
     res.send({status: false})
   })
 });
 
+router.get('/book/:id', function(req, res, next) {
+  Book.findOne({_id: req.params.id})
+  .populate({
+    path: 'author',
+    model: Author
+  })
+  .then(book => {
+    res.send({status: true, book})
+  })
+  .catch(err => {
+    console.log(err)
+    res.send({status: false})
+  })
+});
+
+router.get('/rentbook/rent/:id' , function(req,res,next) {
+  Book.update({_id: req.params.id}, {$set:{quantity: -1}})
+  .then(() =>{
+    res.send({status: true})
+  })
+  .catch(err => {
+    res.send({status: false})
+  })
+});
+
+
+
 router.post('/rent', function(req,res,next) {
   var rentDate = new Date()
   var returnDueDate = new Date(new Date() + (7 * 24 * 60 * 60 * 1000))
-  new RentBook({
-    book: req.body.book,
-    borrower: req.body.user,
-    rentDate: rentDate,
-    returnDueDate: returnDueDate,
-  }).save(err => {
-    if(err) {
-      console.log(err)
-      res.send({status: false, err})
-    } else {
-      res.send({status: true})
-    }
+  Book.update({_id: req.body.book}, {$inc :{quantity: -1}})
+  .then(() => {
+    new RentBook({
+      book: req.body.book,
+      borrower: req.body.user,
+      rentDate: rentDate,
+      returnDueDate: returnDueDate
+    }).save(err => {
+      if(err) {
+        console.log(err)
+        res.send({status: false, err})
+      } else {
+        res.send({status: true})
+      }
+    })
+  })
+  .catch(err => {
+    res.send({status: false})
   })
 })
+
+router.post('/return', function(req,res,next) {
+  var returnDate = new Date()
+  Book.update({_id: req.body.book}, {$inc :{quantity: 1}})
+  .then(() => {
+    RentBook.update({_id:req.body.rentList}, {$set: {returnDate: returnDate}})
+    .then(() =>{
+      res.send({status: true})
+    })
+    .catch((err) =>{
+      res.send({status: false})
+      console.log(err);
+    })
+  })
+  .catch(err => {
+    res.send({status: false})
+  })
+})
+
+
 
 const word = ['Ace','Betty','Canon','David','East','Fatty','Growning','Harry','Isaac','Jack','Kelly','Lilly','Mary','Nelson','Oston','Philip','Queen','Ryan','Simon','Todd','Ured','VI','W.','Yvern','Zedd']
 const word2 = `bird

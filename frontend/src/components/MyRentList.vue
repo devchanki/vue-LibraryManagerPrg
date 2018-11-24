@@ -12,8 +12,9 @@
         <a href="/myrentlist" class="menuLink">빌린 책 목록/반납</a>
       </ul>
     </div>
+
     <div class="top-bar">
-      <p>도서관</p>
+      <p>빌린 책 현황</p>
       <div class="nav-bar">
         <div class="dot-nav" v-on:click="showmenu">
           <span class="dot-line" ></span>
@@ -22,14 +23,16 @@
         </div>
       </div>
     </div>
+
     <div class="card">
       <ul>
         <li v-for="book in books">
-          <a :href="'/book?id=' + book._id" class="card1">
+          <a class="card1">
             {{
-              book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
+              book.book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
             }}
           </a>
+          <button class="ReturnButton" v-on:click='returnBook(book._id,book.book._id)'>책 반납하기</button>
         </li>
       </ul>
     </div>
@@ -38,62 +41,75 @@
 
 <script>
 export default {
-  data (){
-    return {
+  data() {
+    return{
+      userName: '',
       books: [],
-      userName: String,
       userBookLent: Number
     }
   },
-  beforeCreate: function() {
-    this.$http.get('/api/books/')
+  created :function () {
+    this.userName = window.localStorage.libraryManager;
+    this.$http.get('/api/rentList/'+ this.userName.split("#")[1])
     .then(res => {
       console.log(res.data)
-      if(res.data.status) {
-        this.books = res.data.books
-        this.userName =  window.localStorage.libraryManager;
-        this.$http.get("/api/rentbook/limit/" + this.userName.split("#")[1])
-        .then(res => {
-          if(res.data.status) {
-            this.userBookLent = res.data.count
-            console.log(this.userBookLent)
-          }
-        })
-        .catch(err =>{
-          console.log(err);
-        })
-      }
-    }).catch(err => {
-      console.log(err)
-      res.send({status: false})
+      this.books = res.data.name
+      console.log(this.books)
     })
-  },
+    .catch(err =>{
+      console.log(err);
+    })
+    this.$http.get("/api/rentbook/limit/" + this.userName.split("#")[1])
+    .then(res => {
+      if(res.data.status) {
+        this.userBookLent = res.data.count
+        console.log(this.userBookLent)
+      }
+    })
+    .catch(err =>{
+      console.log(err);
+    })
+   },
 
-  methods: {
-   showmenu: function (event) {
-     document.getElementsByClassName("menutab-close")[0].className="menutab-open";
-   },
-   hidemenu: function (event) {
-   document.getElementsByClassName("menutab-open")[0].className="menutab-close";
-   },
-   logout: function(event){
-     localStorage.removeItem('libraryManager');
-     location.reload();
-   }
+   methods: {
+     showmenu: function (event) {
+       document.getElementsByClassName("menutab-close")[0].className="menutab-open";
+     },
+     hidemenu: function (event) {
+       document.getElementsByClassName("menutab-open")[0].className="menutab-close";
+     },
+     logout: function(event){
+       localStorage.removeItem('libraryManager');
+       location.reload();
+     },
+     returnBook: function(rentListId,bookId){
+       this.$http.post('/api/return/', {
+         book: bookId,
+         rentList: rentListId
+       })
+       .then(res => {
+         console.log(res.data)
+         if(res.data.status) {
+           alert('정상적으로 반납하였습니다.')
+           location.reload()
+         } else {
+           alert('에러발생')
+           location.reload()
+         }
+       })
+     },
   },
   computed: {
-      // 계산된 getter
-      loginCheck: function () {
-        if(!window.localStorage.libraryManager){
-          return true;
-        }
-        else{
-          return false;
-        }
-      },
+    loginCheck: function () {
+      if(!window.localStorage.libraryManager){
+        return true;
       }
-    }
-
+      else{
+        return false;
+      }
+    },
+  }
+}
 </script>
 
 <style scoped>
@@ -124,17 +140,20 @@ export default {
   z-index: 1;
   transition: right, 0.5s;
 }
+.menutab-close li,.menutab-open li{
+  color: white;
+}
+.menutab-close a,.menutab-open a{
+  text-decoration: none;
+}
 .menuLink{
   display: inline-block;
   padding: 10px 30px;
   border-radius: 8px;
-  margin-top: 15px;
+  margin-top: 10px;
   background-color: white;
   color: #454545;
   width: 200px;
-}
-.menutab-close li,.menutab-open li{
-  color: white;
 }
 .login{
   color: white;
@@ -152,7 +171,8 @@ export default {
   background-color: #0092ff;
   border-radius: 8px;
   cursor: pointer;
-  margin: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 .top-bar{
   width: 100%;
@@ -164,7 +184,7 @@ export default {
   margin: 0;
   font-size: 1.5em;
 }
-.nav-bar {
+.nav-bar{
   width: 60px;
   position: absolute;
   height: 50px;
@@ -192,7 +212,6 @@ export default {
 }
 li{
   list-style: none;
-  margin-bottom: 10px;
 }
 ul{
   padding: 0;
@@ -212,14 +231,16 @@ ul{
   background-color: #454545;
   color: white;
   border-radius: 7px;
-  padding : 8px;
+  padding : 10px;
   margin: 8px;
-  display: block;
+  display: inline-block;
 }
-.card1 a{
-  color: white;
-}
-.card1:hover{
-  background:#EA575B;
+.ReturnButton{
+  width: 100px;
+  height: 40px;
+  background-color: #0092ff;
+  outline: none;
+  font-size: 15px;
+  border-radius: 5px;
 }
 </style>

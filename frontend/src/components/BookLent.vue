@@ -9,6 +9,7 @@
         <li v-if="!loginCheck">{{userBookLent}}권 빌리셨습니다.</li>
         <a href="/" class="menuLink">메인화면으로 가기</a>
         <a href="/booklent" class="menuLink">책빌리러가기</a>
+        <a href="/myrentlist" class="menuLink">빌린 책 목록/반납</a>
       </ul>
     </div>
     <div class="top-bar">
@@ -23,15 +24,16 @@
     </div>
     <div class="card">
       <ul>
-          <li v-for="book in books">
-            <a :href="'/book?id=' + book._id" class="card1">
-              {{
-                book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
-              }}
-            </a>
-            <button class="Lent-Button" v-if="userBookLent <= lentLimit"  v-on:click='rent(book._id)'>책 빌리기</button>
-            <button class="Lent-Unavailable" v-else>빌릴 수 없습니다.</button>
-          </li>
+        <li v-for="book in books">
+          <a :href="'/book?id=' + book._id" class="card1">
+            {{
+              book.name.split(" ").map(el => el[0].toUpperCase() + el.slice(1)).join(" ")
+            }}
+          </a>
+          <a class="card1">책 재고: {{book.quantity}}</a>
+          <button class="Lent-Button" v-if="userBookLent <= lentLimit || bookQuantity < 1"  v-on:click='rent(book._id)'>책 빌리기</button>
+          <button class="Lent-Unavailable" v-else>빌릴 수 없습니다.</button>
+        </li>
       </ul>
     </div>
   </div>
@@ -46,7 +48,8 @@ export default {
       lentLimit: 5,
       userInfo: [],
       admin: Boolean,
-      userBookLent: Number
+      userBookLent: Number,
+      bookQuantity: Number
     }
   },
   beforeCreate: function() {
@@ -60,6 +63,7 @@ export default {
         .then(res => {
           if(res.data.status) {
             this.userBookLent = res.data.count
+            console.log(this.userBookLent)
           }
         })
         .catch(err =>{
@@ -70,23 +74,21 @@ export default {
       .catch(err=> {
         console.log(err)
       })
-
-
   },
   methods: {
    showmenu: function (event) {
      document.getElementsByClassName("menutab-close")[0].className="menutab-open";
    },
    hidemenu: function (event) {
-   document.getElementsByClassName("menutab-open")[0].className="menutab-close";
+     document.getElementsByClassName("menutab-open")[0].className="menutab-close";
    },
    logout: function(event){
      localStorage.removeItem('libraryManager');
      location.reload();
    },
-   rent: function(bookname){
+   rent: function(bookId){
        this.$http.post('/api/rent/', {
-         book: bookname,
+         book: bookId,
          user: this.userName.split("#")[1]
        })
        .then(res => {
@@ -142,7 +144,6 @@ export default {
   z-index: 1;
   transition: right, 0.5s;
 }
-
 .menutab-close li,.menutab-open li{
   color: white;
 }
@@ -150,12 +151,13 @@ export default {
   text-decoration: none;
 }
 .menuLink{
-  display: block;
+  display: inline-block;
   padding: 10px 30px;
   border-radius: 8px;
-  margin-top: 10px;
+  margin-top: 15px;
   background-color: white;
   color: #454545;
+  width: 200px;
 }
 .login{
   color: white;
@@ -164,7 +166,7 @@ export default {
   background-color: #0092ff;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px;
 }
 .logout{
   color: white;
@@ -173,7 +175,7 @@ export default {
   background-color: #0092ff;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px;
 }
 .top-bar{
   width: 100%;
@@ -191,29 +193,29 @@ export default {
   height: 50px;
   top: 22px;
   right: 10px;
-
-  }
-  .dot-nav {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-  }
-  .dot-line {
-    display: inline;
-    border-style: solid;
-    border-bottom: 2px solid;
-    color: #454545;
-    height: 2px;
-    margin: 2px;
-  }
-  .nav-bar :hover span{
-    color: #EA575B
-  }
+}
+.dot-nav {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+.dot-line {
+  display: inline;
+  border-style: solid;
+  border-bottom: 2px solid;
+  color: #454545;
+  height: 2px;
+  margin: 2px;
+}
+.nav-bar :hover span{
+  color: #EA575B
+}
 .book-list{
   background-color: yellow;
 }
 li{
   list-style: none;
+  margin-bottom: 10px;
 }
 ul{
   padding: 0;
